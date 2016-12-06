@@ -59,8 +59,8 @@ metadata {
 	tiles(scale: 2) {
 		multiAttributeTile(name:"motion", type: "generic", width: 6, height: 4){
 			tileAttribute ("device.motion", key: "PRIMARY_CONTROL") {
-			attributeState("active", label:'motion', icon:"st.motion.motion.active", backgroundColor:"#ffa81e")   
-			attributeState("inactive", label:'no motion', icon:"st.motion.motion.inactive", backgroundColor:"#79b821")
+				attributeState("active", label:'motion', icon:"st.motion.motion.active", backgroundColor:"#ffa81e")   
+				attributeState("inactive", label:'no motion', icon:"st.motion.motion.inactive", backgroundColor:"#79b821")
 			}
 		}
 		valueTile("temperature", "device.temperature", width: 2, height: 2) {
