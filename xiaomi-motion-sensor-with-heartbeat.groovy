@@ -272,7 +272,9 @@ private Map getMotionResult(value) {
     return commands
 }
 
-
+private String swapEndianHex(String hex) {
+    reverseArray(hex.decodeHex()).encodeHex()
+}
 
 def stopMotion() {
    sendEvent(name:"motion", value:"inactive")
