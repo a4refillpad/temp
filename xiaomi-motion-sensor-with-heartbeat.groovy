@@ -272,6 +272,14 @@ private Map getMotionResult(value) {
     return commands
 }
 
+private byte[] reverseArray(byte[] array) {
+    byte tmp;
+    tmp = array[1];
+    array[1] = array[0];
+    array[0] = tmp;
+    return array
+}
+
 private String swapEndianHex(String hex) {
     reverseArray(hex.decodeHex()).encodeHex()
 }
