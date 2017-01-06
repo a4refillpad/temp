@@ -25,7 +25,9 @@ metadata {
 		capability "Refresh"
 		capability "Health Check"
 		capability "Sensor"
-
+		
+        	attribute "lastCheckin", "String"
+		
 		command "enrollResponse"
 
 		fingerprint inClusters: "0000,0001,0003,0402,0500,0020,0B05", outClusters: "0019", manufacturer: "CentraLite", model: "3305-S"
@@ -110,7 +112,7 @@ def parse(String description) {
 
 //  send event for heartbeat    
     def now = new Date()
-    sendEvent(name: "heartbeat", value: now)
+    sendEvent(name: "lastCheckin", value: now)
             
 	if (description?.startsWith('enroll request')) {
 		List cmds = enrollResponse()
