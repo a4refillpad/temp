@@ -17,6 +17,7 @@
  * Added heartbeat/lastcheckin for monitoring
  * Added battery and refresh 
  * Motion background colours consistent with latest DH
+ * Fixed max battery percentage to be 100%
  */
 
 metadata {
@@ -109,7 +110,13 @@ private Map getBatteryResult(rawValue) {
 	]
     
 	def volts = rawValue / 1
-    result.value = volts
+	def maxVolts = 100
+
+	if (volts > maxVolts) {
+		volts = maxVolts
+    	}
+	
+    	result.value = volts
 	result.descriptionText = "${linkText} battery was ${result.value}%"
 
 	return result
