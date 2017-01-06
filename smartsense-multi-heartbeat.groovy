@@ -35,6 +35,7 @@ metadata {
 		fingerprint inClusters: "0000,0001,0003,000F,0020,0402,0500,FC02", outClusters: "0019", manufacturer: "SmartThings", model: "multiv4", deviceJoinName: "Multipurpose Sensor"
 
 		attribute "status", "string"
+		attribute "lastCheckin", "String"
 	}
 
 	simulator {
@@ -131,7 +132,7 @@ def parse(String description) {
 
 //  send event for heartbeat    
     def now = new Date()
-    sendEvent(name: "heartbeat", value: now)
+    sendEvent(name: "lastCheckin", value: now)
 
 	if (description?.startsWith('enroll request')) {
 		List cmds = enrollResponse()
