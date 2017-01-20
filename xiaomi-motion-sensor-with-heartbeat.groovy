@@ -18,6 +18,7 @@
  * Added battery and refresh 
  * Motion background colours consistent with latest DH
  * Fixed max battery percentage to be 100%
+ * Added Last update to main tile
  */
 
 metadata {
@@ -29,7 +30,7 @@ metadata {
         
         attribute "lastCheckin", "String"
 
-		fingerprint profileId: "0104", inClusters: "0000, 0003, 0004, 0005, 0006"
+	fingerprint profileId: "0104", inClusters: "0000, 0003, 0004, 0005, 0006"
     	fingerprint profileId: "0104", inClusters: "0000, 0003, 0006", outClusters: "0003, 0006, 0019, 0406", manufacturer: "Leviton", model: "ZSS-10", deviceJoinName: "Leviton Switch"
     	fingerprint profileId: "0104", deviceId: "0104", inClusters: "0000, 0003, FFFF, 0019", outClusters: "0000, 0004, 0003, 0006, 0008, 0005, 0019", manufacturer: "LUMI", model: "lumi.sensor_motion", deviceJoinName: "Xiaomi Motion"
         
@@ -50,6 +51,9 @@ metadata {
 				attributeState "active", label:'motion', icon:"st.motion.motion.active", backgroundColor:"#ffa81e"
 				attributeState "inactive", label:'no motion', icon:"st.motion.motion.inactive", backgroundColor:"#79b821"
 			}
+            tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
+    			attributeState("default", label:'Last Update: ${currentValue}',icon: "st.Electronics.electronics13")
+            }
 		}
 		valueTile("battery", "device.battery", decoration: "flat", inactiveLabel: false, width: 2, height: 2) {
 			state "battery", label:'${currentValue}% battery', unit:""
@@ -130,10 +134,6 @@ private Map parseCatchAllMessage(String description) {
 		switch(cluster.clusterId) {
 			case 0x0000:
 			resultMap = getBatteryResult(cluster.data.last())
-			break
-
-			case 0xFC02:
-			log.debug 'ACCELERATION'
 			break
 
 			case 0x0402:
