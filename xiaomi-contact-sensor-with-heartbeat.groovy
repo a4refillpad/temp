@@ -13,7 +13,7 @@
  *
  * Based on original DH by Eric Maycock 2015 and Rave from Lazcad
  *  change log:
- *	added DH Colours
+ *  add DH Colours
  *  added 100% battery max
  *  fixed battery parsing problem
  *  added lastcheckin attribute and tile
