@@ -21,14 +21,14 @@
 metadata {
 	definition (name: "Xiaomi Zigbee Button", namespace: "a4refillpad", author: "a4refillpad") {
 		capability "Battery"
-        capability "Button"
+		capability "Button"
 		capability "Holdable Button"
-        capability "Actuator"
+		capability "Actuator"
 		capability "Switch"
 		capability "Momentary"
-        capability "Configuration"
-		capability "Sensor"
-        capability "Refresh"
+		capability "Configuration"
+        capability "Sensor"
+		capability "Refresh"
         
         attribute "lastPress", "string"
         attribute "batterylevel", "string"
@@ -53,10 +53,7 @@ metadata {
     }
 
 	tiles(scale: 2) {
-/*	    standardTile("switch", "device.switch", width: 6, height: 4,  icon: "st.unknown.zwave.remote-controller", canChangeIcon: true) {
-			state "off", label: 'Push', action: "momentary.push", backgroundColor: "#ffffff", nextState: "on"
-			state "on", label: 'Push', action: "momentary.push", backgroundColor: "#53a7c0"
-		} */
+
 		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4, canChangeIcon: true) {
 			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
            		attributeState("on", label:'Push', action: "momentary.push", backgroundColor:"#53a7c0")
