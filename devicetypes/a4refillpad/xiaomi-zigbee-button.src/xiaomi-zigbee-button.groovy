@@ -16,6 +16,7 @@
  *  fixed battery parsing problem
  *  added lastcheckin attribute and tile
  *  added a means to also push button in as tile on smartthings app
+ *  fixed ios tile label problem and battery bug
  *
  */
 metadata {
@@ -56,8 +57,8 @@ metadata {
 
 		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4, canChangeIcon: true) {
 			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-           		attributeState("on", label:'Push', action: "momentary.push", backgroundColor:"#53a7c0")
-            	attributeState("off", label:'Push', action: "momentary.push", backgroundColor:"#ffffff", nextState: "on")   
+           		attributeState("on", label:' push', action: "momentary.push", backgroundColor:"#53a7c0")
+            	attributeState("off", label:' push', action: "momentary.push", backgroundColor:"#ffffff", nextState: "on")   
  			}
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
     			attributeState("default", label:'Last Update: ${currentValue}',icon: "st.Electronics.electronics13")
@@ -147,8 +148,8 @@ private Map getBatteryResult(rawValue) {
      
     def maxbatt = 100
 
-	if (battvalue > maxbatt) {
-				battvalue = maxbatt
+	if (battValue > maxbatt) {
+				battValue = maxbatt
     }
    
 
@@ -157,7 +158,7 @@ private Map getBatteryResult(rawValue) {
 		value: battValue,
         unit: "%",
         isStateChange:true,
-        descriptionText : "${linkText} battery was ${rawValue}%"
+        descriptionText : "${linkText} battery was ${rawValue}%${battValue}%"
 	]
     
     log.debug result.descriptionText
