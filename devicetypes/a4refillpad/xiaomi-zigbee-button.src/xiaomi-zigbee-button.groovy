@@ -20,7 +20,7 @@
  *
  */
 metadata {
-	definition (name: "Xiaomi Zigbee Button", namespace: "a4refillpad", author: "a4refillpad") {
+	definition (name: "Xiaomi Zigbee Button", namespace: "xiaomi", author: "a4refillpad") {
 		capability "Battery"
 		capability "Button"
 		capability "Holdable Button"
