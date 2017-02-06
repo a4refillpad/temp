@@ -13,10 +13,11 @@
  *
  * Based on original DH by Eric Maycock 2015 and Rave from Lazcad
  *  change log:
- *  add DH Colours
+ *	added DH Colours
  *  added 100% battery max
  *  fixed battery parsing problem
  *  added lastcheckin attribute and tile
+ *  added extra tile to show when last opened
  *
  */
 metadata {
@@ -28,6 +29,7 @@ metadata {
    capability "Battery"
    
    attribute "lastCheckin", "String"
+   attribute "lastOpened", "String"
    
    fingerprint profileId: "0104", deviceId: "0104", inClusters: "0000, 0003", outClusters: "0000, 0004, 0003, 0006, 0008, 0005", manufacturer: "LUMI", model: "lumi.sensor_magnet", deviceJoinName: "Xiaomi Door Sensor"
    
@@ -50,6 +52,12 @@ metadata {
     			attributeState("default", label:'Last Update: ${currentValue}',icon: "st.Electronics.electronics13")
             }
       }
+      standardTile("icon", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 1) {
+            state "default", label:'Last Opened:'
+      }
+      valueTile("lastopened", "device.lastOpened", decoration: "flat", inactiveLabel: false, width: 4, height: 1) {
+			state "default", label:'${currentValue}'
+		}
       valueTile("battery", "device.battery", decoration: "flat", inactiveLabel: false, width: 2, height: 2) {
 			state "battery", label:'${currentValue}% battery', unit:""
 		}
@@ -61,7 +69,7 @@ metadata {
 	  }
 
       main (["contact"])
-      details(["contact","refresh","configure", "battery"])
+      details(["contact","battery","configure","refresh","icon","lastopened"])
    }
 }
 
@@ -77,6 +85,8 @@ def parse(String description) {
    log.debug "${resultMap}"
    if (description?.startsWith('on/off: '))
       map = parseCustomMessage(description) 
+      sendEvent(name: "lastOpened", value: now)
+
    if (description?.startsWith('catchall:')) 
       map = parseCatchAllMessage(description)
    log.debug "Parse returned $map"
@@ -183,6 +193,7 @@ def refresh() {
     def endpointId = 0x01
 	[
 	    "st rattr 0x${device.deviceNetworkId} ${endpointId} 0x0000 0x0000", "delay 200"
+
 	] //+ enrollResponse()
 }
 
