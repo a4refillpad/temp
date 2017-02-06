@@ -13,7 +13,7 @@
  *
  * Based on original DH by Eric Maycock 2015 and Rave from Lazcad
  *  change log:
- *	added DH Colours
+ *  added DH Colours
  *  added 100% battery max
  *  fixed battery parsing problem
  *  added lastcheckin attribute and tile
@@ -83,10 +83,10 @@ def parse(String description) {
    Map map = [:]
 
    log.debug "${resultMap}"
-   if (description?.startsWith('on/off: '))
+   if (description?.startsWith('on/off: ')) {
       map = parseCustomMessage(description) 
       sendEvent(name: "lastOpened", value: now)
-
+	}
    if (description?.startsWith('catchall:')) 
       map = parseCatchAllMessage(description)
    log.debug "Parse returned $map"
