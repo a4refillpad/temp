@@ -196,6 +196,7 @@ private Map parseReportAttributeMessage(String description) {
 	if (descMap.cluster == "0402" && descMap.attrId == "0000") {
 		def value = getTemperature(descMap.value)
 		resultMap = getTemperatureResult(value)
+        log.debug "temperature result: $resultMap"
 	}
 	else if (descMap.cluster == "0001" && descMap.attrId == "0020") {
 		resultMap = getBatteryResult(Integer.parseInt(descMap.value, 16))
@@ -211,8 +212,11 @@ private Map parseReportAttributeMessage(String description) {
 private Map parseCustomMessage(String description) {
 	Map resultMap = [:]
 	if (description?.startsWith('temperature: ')) {
-		def value = zigbee.parseHATemperatureValue(description, "temperature: ", getTemperatureScale())
-		resultMap = getTemperatureResult(value)
+        def value = ((description - "temperature: ").trim()) as Float
+        value = (Math.round(value * 10))/ 10
+		log.debug "parseCustomMessage: $value"
+		resultMap = getTemperatureResult(value) 
+        log.debug "parseCustomMessage2: $resultMap"        
 	}
 	return resultMap
 }
@@ -274,11 +278,11 @@ private Map getBatteryResult(rawValue) {
 
 private Map getTemperatureResult(value) {
 	log.debug 'TEMP'
-/*	if (tempOffset) {
+	if (tempOffset) {
 		def offset = tempOffset as int
 		def v = value as int
 		value = v + offset
-	} */
+	} 
     def descriptionText
     if ( temperatureScale == 'C' )
     	descriptionText = '{{ device.displayName }} was {{ value }}°C'
