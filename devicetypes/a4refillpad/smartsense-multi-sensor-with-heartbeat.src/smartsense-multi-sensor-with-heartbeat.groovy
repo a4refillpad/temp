@@ -245,7 +245,9 @@ private List parseReportAttributeMessage(String description) {
 private Map parseCustomMessage(String description) {
 	Map resultMap = [:]
 	if (description?.startsWith('temperature: ')) {
-		def value = zigbee.parseHATemperatureValue(description, "temperature: ", getTemperatureScale())
+//		def value = zigbee.parseHATemperatureValue(description, "temperature: ", getTemperatureScale())
+		def value = ((description - "temperature: ").trim()) as Float
+        value = (Math.round(value * 10))/ 10 as Float
 		resultMap = getTemperatureResult(value)
 	}
 	return resultMap

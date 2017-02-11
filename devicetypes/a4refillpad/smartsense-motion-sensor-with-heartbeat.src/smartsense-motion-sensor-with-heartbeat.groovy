@@ -213,7 +213,7 @@ private Map parseCustomMessage(String description) {
 	Map resultMap = [:]
 	if (description?.startsWith('temperature: ')) {
         def value = ((description - "temperature: ").trim()) as Float
-        value = (Math.round(value * 10))/ 10
+        value = (Math.round(value * 10))/ 10 as Float
 		log.debug "parseCustomMessage: $value"
 		resultMap = getTemperatureResult(value) 
         log.debug "parseCustomMessage2: $resultMap"        
