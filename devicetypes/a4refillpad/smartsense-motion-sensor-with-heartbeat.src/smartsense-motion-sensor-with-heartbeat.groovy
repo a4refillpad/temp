@@ -88,15 +88,15 @@ metadata {
 		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
 			state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
 		}
-		standardTile("icon", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Last Motion:'
+		standardTile("icon", "device.lastMotion", inactiveLabel: false, decoration: "flat", width: 2, height: 1) {
+            state "default", label:'Last Motion:', icon:"st.Entertainment.entertainment15"
         }
         valueTile("lastmotion", "device.lastMotion", decoration: "flat", inactiveLabel: false, width: 4, height: 1) {
 			state "default", label:'${currentValue}'
         }
         
 		main(["motion", "temperature"])
-		details(["motion", "temperature", "battery", "refresh","icon", "lastmotion", "reset"])
+		details(["motion", "temperature", "battery", "refresh","icon", "lastmotion"])
 	}
 }
 
