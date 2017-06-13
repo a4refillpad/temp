@@ -61,8 +61,8 @@ metadata {
 	tiles(scale: 2) {
 		multiAttributeTile(name:"motion", type: "generic", width: 6, height: 4){
 			tileAttribute ("device.motion", key: "PRIMARY_CONTROL") {
-                attributeState("inactive", label:'no motion', icon:"st.motion.motion.inactive", backgroundColor:"#79b821")
-            	attributeState("active", label:'motion', icon:"st.motion.motion.active", backgroundColor:"#ffa81e")   
+                attributeState("inactive", label:'no motion', icon:"st.motion.motion.inactive", backgroundColor:"#ffffff")
+            	attributeState("active", label:'motion', icon:"st.motion.motion.active", backgroundColor:"#00a0dc")   
                 
 			}
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
@@ -203,6 +203,8 @@ private Map parseReportAttributeMessage(String description) {
 	}
 	else if (descMap.cluster == "0406" && descMap.attrId == "0000") {
 		def value = descMap.value.endsWith("01") ? "active" : "inactive"
+        // below to prevent any motions "stuck" as active
+        if (value == "active") runIn(120, stopMotion)
 		resultMap = getMotionResult(value)
 	}
 
@@ -311,6 +313,11 @@ private Map getMotionResult(value) {
 	]
 }
 
+def stopMotion() {
+   log.debug "motion force stopped"
+   sendEvent(name:"motion", value:"inactive")
+}
+
 /**
  * PING is used by Device-Watch in attempt to reach the Device
  * */
@@ -325,17 +332,18 @@ def refresh() {
 		"st rattr 0x${device.deviceNetworkId} 1 1 0x20", "delay 2000"
 	]
 
-	return refreshCmds + enrollResponse()
+	return refreshCmds + configure() + enrollResponse()
 }
 
 def configure() {
 	// Device-Watch allows 2 check-in misses from device + ping (plus 1 min lag time)
 	// enrolls with default periodic reporting until newer 5 min interval is confirmed
-	sendEvent(name: "checkInterval", value: 2 * 60 * 60 + 1 * 60, displayed: false, data: [protocol: "zigbee", hubHardwareId: device.hub.hardwareID])
-
+	sendEvent(name: "checkInterval", value: 2 * 15 * 60 + 2 * 60, displayed: false, data: [protocol: "zigbee", hubHardwareId: device.hub.hardwareID])
+	log.debug "configure reporting"
 	// temperature minReportTime 30 seconds, maxReportTime 5 min. Reporting interval if no activity
 	// battery minReport 30 seconds, maxReportTime 6 hrs by default
-	return refresh() + zigbee.batteryConfig() + zigbee.temperatureConfig(30, 900) // send refresh cmds as part of config
+//	return refresh() + zigbee.batteryConfig(30, 7200) + zigbee.temperatureConfig(30, 1800) // send refresh cmds as part of config
+	return zigbee.batteryConfig(30, 7200) + zigbee.temperatureConfig(30, 1800) // send refresh cmds as part of config
 }
 
 def enrollResponse() {

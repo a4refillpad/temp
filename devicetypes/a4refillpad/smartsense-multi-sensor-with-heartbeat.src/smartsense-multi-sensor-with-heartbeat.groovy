@@ -31,6 +31,9 @@ metadata {
 		attribute "lastOpened", "String"
 
  		command "enrollResponse"
+   		command "resetClosed"
+   		command "resetOpen"
+        
  		fingerprint inClusters: "0000,0001,0003,0402,0500,0020,0B05,FC02", outClusters: "0019", manufacturer: "CentraLite", model: "3320"
 		fingerprint inClusters: "0000,0001,0003,0402,0500,0020,0B05,FC02", outClusters: "0019", manufacturer: "CentraLite", model: "3321"
 		fingerprint inClusters: "0000,0001,0003,0402,0500,0020,0B05,FC02", outClusters: "0019", manufacturer: "CentraLite", model: "3321-S", deviceJoinName: "Multipurpose Sensor"
@@ -77,10 +80,10 @@ metadata {
 	tiles(scale: 2) {
 		multiAttributeTile(name:"status", type: "generic", width: 6, height: 4){
 			tileAttribute ("device.status", key: "PRIMARY_CONTROL") {
-				attributeState "open", label:'Open', icon:"st.contact.contact.open", backgroundColor:"#ffa81e"
-				attributeState "closed", label:'Closed', icon:"st.contact.contact.closed", backgroundColor:"#79b821"
-				attributeState "garage-open", label:'Open', icon:"st.doors.garage.garage-open", backgroundColor:"#ffa81e"
-				attributeState "garage-closed", label:'Closed', icon:"st.doors.garage.garage-closed", backgroundColor:"#79b821"
+				attributeState "open", label:'Open', icon:"st.contact.contact.open", backgroundColor:"#e86d13"
+				attributeState "closed", label:'Closed', icon:"st.contact.contact.closed", backgroundColor:"#00a0dc"
+				attributeState "garage-open", label:'Open', icon:"st.doors.garage.garage-open", backgroundColor:"#e86d13"
+				attributeState "garage-closed", label:'Closed', icon:"st.doors.garage.garage-closed", backgroundColor:"#00a0dc"
 			}
             tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
     			attributeState("default", label:'Last Update: ${currentValue}',icon: "st.Health & Wellness.health9")
@@ -113,16 +116,21 @@ metadata {
 		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
 			state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
 		}
-		standardTile("icon", "device.refresh", inactiveLabel: false, decoration: "flat", width: 4, height: 1) {
-			state "default", label:'Last Opened:'
+      	standardTile("icon", "device.refresh", inactiveLabel: false, decoration: "flat", width: 4, height: 1) {
+            state "default", label:'Last Opened:', icon:"st.Entertainment.entertainment15"
       	}
      	valueTile("lastopened", "device.lastOpened", decoration: "flat", inactiveLabel: false, width: 4, height: 1) {
 			state "default", label:'${currentValue}'
 		}
-
+	  	standardTile("resetClosed", "device.resetClosed", inactiveLabel: false, decoration: "flat", width: 3, height: 1) {
+			state "default", action:"resetClosed", label: "Override Close", icon:"st.contact.contact.closed"
+	  	}
+		standardTile("resetOpen", "device.resetOpen", inactiveLabel: false, decoration: "flat", width: 3, height: 1) {
+			state "default", action:"resetOpen", label: "Override Open", icon:"st.contact.contact.open"
+	  	}      
 
 		main(["status", "acceleration", "temperature"])
-		details(["status",, "temperature", "battery", "refresh", "acceleration", "icon", "lastopened"])
+		details(["status",, "temperature", "battery", "refresh", "acceleration", "icon", "lastopened","resetClosed","resetOpen"])
 	}
  }
 
@@ -557,4 +565,12 @@ private byte[] reverseArray(byte[] array) {
 		i++;
 	}
 	return array
+}
+
+def resetClosed() {
+	sendEvent(name:"status", value:"closed")
+} 
+
+def resetOpen() {
+	sendEvent(name:"status", value:"open")
 }
